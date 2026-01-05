@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calendario de Limpieza 2026</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #1a1a1a; color: #eee; text-align: center; margin: 0; padding: 20px; }
+        h1 { color: #fff; margin-bottom: 10px; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; max-width: 1200px; margin: 0 auto; }
+        .month { background: #2d2d2d; padding: 15px; border-radius: 12px; box-shadow: 0 4px 15px rgba(0,0,0,0.3); }
+        h3 { margin-top: 0; border-bottom: 1px solid #444; padding-bottom: 5px; }
+        table { width: 100%; border-collapse: collapse; }
+        th { color: #888; font-size: 0.7em; text-transform: uppercase; padding-bottom: 5px; }
+        td { padding: 8px; font-size: 0.9em; border: 1px solid #3d3d3d; border-radius: 4px; }
+        /* Colores actualizados */
+        .pry { background-color: #ffc0cb !important; color: #000; font-weight: bold; } /* Rosa */
+        .jere { background-color: #90ee90 !important; color: #000; font-weight: bold; } /* Verde */
+        .eze { background-color: #add8e6 !important; color: #000; font-weight: bold; } /* Azul */
+        .legend { display: flex; justify-content: center; gap: 15px; margin-bottom: 30px; flex-wrap: wrap; }
+        .item { padding: 8px 20px; border-radius: 20px; font-size: 0.9em; box-shadow: 0 2px 5px rgba(0,0,0,0.2); }
+        .current-week { border: 2px solid #fff; position: relative; }
+    </style>
+</head>
+<body>
+
+    <h1>Calendario de Cacas 2026 🐶</h1>
+    
+    <div class="legend">
+        <div class="item pry">Pry (Rosa)</div>
+        <div class="item jere">Jere (Verde)</div>
+        <div class="item eze">Eze (Azul)</div>
+    </div>
+
+    <div id="calendario" class="grid"></div>
+
+    <script>
+        // NUEVO ORDEN: Pry (0), Jere (1), Eze (2)
+        const nombres = ['pry', 'jere', 'eze'];
+        const fechaInicio = new Date(2026, 0, 1); 
+
+        function obtenerClaseTurno(fecha) {
+            if (fecha < fechaInicio) return '';
+            const diasDif = Math.floor((fecha - fechaInicio) / (24 * 60 * 60 * 1000));
+            const semanasDif = Math.floor(diasDif / 7);
+            return nombres[semanasDif % 3];
+        }
+
+        function crearMes(mesIdx) {
+            const diasSemana = ['D', 'L', 'M', 'M', 'J', 'V', 'S'];
+            const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
+            
+            let html = `<div class="month"><h3>${meses[mesIdx]}</h3><table><tr>`;
+            diasSemana.forEach(d => html += `<th>${d}</th>`);
+            html += '</tr><tr>';
+
+            const fecha = new Date(2026, mesIdx, 1);
+            const primerDiaSigMes = new Date(2026, mesIdx + 1, 1);
+            
+            for (let i = 0; i < fecha.getDay(); i++) html += '<td></td>';
+
+            while (fecha < primerDiaSigMes) {
+                if (fecha.getDay() === 0 && fecha.getDate() !== 1) html += '<tr>';
+                
+                const clase = obtenerClaseTurno(new Date(fecha));
+                html += `<td class="${clase}">${fecha.getDate()}</td>`;
+                
+                if (fecha.getDay() === 6) html += '</tr>';
+                fecha.setDate(fecha.getDate() + 1);
+            }
+            html += '</table></div>';
+            return html;
+        }
+
+        const contenedor = document.getElementById('calendario');
+        for (let m = 0; m < 12; m++) contenedor.innerHTML += crearMes(m);
+    </script>
+</body>
+</html>
