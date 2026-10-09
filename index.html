@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Calendario de Limpieza 2026</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0e1020; --glass:rgba(255,255,255,.06); --line:rgba(255,255,255,.12);
+  --text:#f2f1f8; --muted:#9a98b4;
+  --pry:#ff9fc4; --jere:#86e3a8; --eze:#8fcaff; --ok:#86e3a8;
+  --font:'Bricolage Grotesque','Segoe UI',system-ui,-apple-system,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;min-height:100vh;font-family:var(--font);color:var(--text);background:var(--bg);
+  padding:max(20px,env(safe-area-inset-top)) 18px max(40px,env(safe-area-inset-bottom));overflow-x:hidden}
+.aurora{position:fixed;inset:0;z-index:-1;overflow:hidden;pointer-events:none}
+.aurora i{position:absolute;width:55vmax;height:55vmax;border-radius:50%;filter:blur(90px);opacity:.38;animation:drift 26s ease-in-out infinite alternate}
+.aurora i:nth-child(1){background:#6b4bff;top:-20vmax;left:-15vmax}
+.aurora i:nth-child(2){background:#ff5fa2;bottom:-25vmax;right:-15vmax;animation-duration:32s}
+.aurora i:nth-child(3){background:#2fd1b4;top:35%;left:40%;width:35vmax;height:35vmax;opacity:.22;animation-duration:38s}
+@keyframes drift{to{transform:translate3d(8vmax,5vmax,0) scale(1.15)}}
+.wrap{max-width:1180px;margin:0 auto}
+header{text-align:center;margin:10px 0 26px}
+h1{font-size:clamp(1.9rem,5vw,3.1rem);font-weight:800;letter-spacing:-.03em;margin:0 0 6px}
+.sub{color:var(--muted);margin:0}
+.legend{display:flex;justify-content:center;gap:10px;margin:18px 0 0;flex-wrap:wrap}
+.chip{display:inline-flex;align-items:center;gap:8px;padding:7px 16px;border-radius:99px;background:var(--glass);border:1px solid var(--line);font-size:.9rem;backdrop-filter:blur(10px)}
+.chip::before{content:"";width:10px;height:10px;border-radius:50%;background:var(--c)}
+.pry{--c:var(--pry)} .jere{--c:var(--jere)} .eze{--c:var(--eze)}
+
+/* Hero: la entrega de la semana */
+.hero{position:relative;display:grid;grid-template-columns:1fr auto;gap:24px;align-items:center;
+  padding:clamp(20px,4vw,34px);border-radius:28px;background:var(--glass);border:1px solid var(--line);
+  backdrop-filter:blur(22px);-webkit-backdrop-filter:blur(22px);box-shadow:0 20px 60px rgba(0,0,0,.35);
+  margin-bottom:34px;overflow:hidden;animation:rise .8s cubic-bezier(.2,.8,.2,1) both}
+.hero::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--c)}
+@keyframes rise{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
+.hero h2{font-size:clamp(1.8rem,5vw,3rem);margin:2px 0 4px;letter-spacing:-.03em;line-height:1.05}
+.hero h2 b{color:var(--c)}
+.hero .rango{color:var(--muted);margin:0 0 18px}
+.bar{height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;max-width:360px}
+.bar span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--pry),var(--jere),var(--eze));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
+.prog{font-size:.85rem;color:var(--muted);margin:8px 0 0}
+.estado{display:flex;flex-direction:column;align-items:center;gap:12px;min-width:210px}
+.btn{font:inherit;font-weight:600;border:0;cursor:pointer;border-radius:16px;padding:14px 22px;color:#10121f;background:var(--c,var(--jere));
+  transition:transform .2s,box-shadow .2s,filter .2s;box-shadow:0 8px 24px -8px var(--c,var(--jere))}
+.btn:hover{transform:translateY(-2px);filter:brightness(1.08)}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.35;cursor:not-allowed;transform:none;box-shadow:none;filter:none}
+.btn.ghost{background:var(--glass);color:var(--text);border:1px solid var(--line);box-shadow:none}
+.pulso{animation:pulso 2.4s ease-in-out infinite}
+@keyframes pulso{0%,100%{box-shadow:0 0 0 0 color-mix(in srgb,var(--c) 55%,transparent)}50%{box-shadow:0 0 0 14px transparent}}
+.thumb{width:150px;height:150px;border-radius:20px;object-fit:cover;border:2px solid var(--ok);cursor:zoom-in;transition:transform .25s;animation:pop .6s cubic-bezier(.3,1.5,.5,1) both}
+.thumb:hover{transform:scale(1.04) rotate(-1deg)}
+@keyframes pop{from{opacity:0;transform:scale(.6) rotate(-6deg)}to{opacity:1;transform:none}}
+.ok{display:flex;align-items:center;gap:8px;color:var(--ok);font-weight:600;text-align:center}
+.tick{width:26px;height:26px;flex:none}
+.tick circle{fill:none;stroke:var(--ok);stroke-width:3;stroke-dasharray:151;stroke-dashoffset:151;animation:draw .6s .1s forwards}
+.tick path{fill:none;stroke:var(--ok);stroke-width:3.5;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:40;stroke-dashoffset:40;animation:draw .4s .5s forwards}
+@keyframes draw{to{stroke-dashoffset:0}}
+
+/* Meses */
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(270px,1fr));gap:18px}
+.month{padding:16px;border-radius:22px;background:var(--glass);border:1px solid var(--line);backdrop-filter:blur(14px);
+  animation:rise .7s cubic-bezier(.2,.8,.2,1) both;animation-delay:calc(var(--i)*55ms + 250ms)}
+.month h3{margin:0 0 10px;font-size:1.1rem;font-weight:600}
+.dias{display:grid;grid-template-columns:repeat(7,1fr);gap:4px}
+.dias .h{color:var(--muted);font-size:.72rem;text-align:center;padding-bottom:4px}
+.d{font:inherit;font-size:.88rem;aspect-ratio:1;border:0;border-radius:10px;display:grid;place-items:center;position:relative;
+  background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--text);cursor:pointer;transition:transform .18s,background .18s}
+.d:hover{transform:scale(1.12);background:var(--c);color:#10121f;z-index:2}
+.d.futuro{opacity:.55}
+.d.hecha{background:var(--c);color:#10121f;font-weight:600}
+.d.hecha::after{content:"✓";position:absolute;top:1px;right:3px;font-size:.55rem}
+.d.hist{cursor:default}
+.d.hist:hover{transform:none}
+.d.hoy{outline:2px solid #fff;outline-offset:1px;animation:hoy 2s ease-in-out infinite}
+@keyframes hoy{50%{outline-color:transparent}}
+.vacio{visibility:hidden}
+.nota{margin:22px 0 0;text-align:center;color:var(--muted);font-size:.8rem}
+
+/* Diálogos */
+dialog{border:1px solid var(--line);border-radius:26px;padding:0;color:var(--text);background:#181a30;width:min(440px,92vw);max-height:90vh;box-shadow:0 30px 80px rgba(0,0,0,.6)}
+dialog[open]{animation:modal .35s cubic-bezier(.2,1.2,.4,1)}
+dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:fade .3s}
+@keyframes modal{from{opacity:0;transform:translateY(30px) scale(.94)}to{opacity:1;transform:none}}
+@keyframes fade{from{opacity:0}}
+.mb{padding:24px}
+.mb h4{margin:0 0 4px;font-size:1.35rem;letter-spacing:-.02em}
+.mb p{margin:0 0 16px;color:var(--muted);font-size:.9rem}
+.drop{display:grid;place-items:center;gap:6px;text-align:center;min-height:190px;border:2px dashed var(--line);border-radius:20px;cursor:pointer;overflow:hidden;position:relative;transition:border-color .2s,background .2s}
+.drop:hover{border-color:var(--jere);background:rgba(134,227,168,.06)}
+.drop input{position:absolute;inset:0;opacity:0;cursor:pointer}
+.drop .ico{font-size:2.2rem}
+.drop img{width:100%;height:100%;max-height:300px;object-fit:cover;display:none}
+.drop.tiene img{display:block}
+.drop.tiene .ph{display:none}
+.chk{display:flex;gap:12px;align-items:center;margin:16px 0;padding:14px;border-radius:16px;background:var(--glass);border:1px solid var(--line);cursor:pointer;user-select:none}
+.chk input{width:22px;height:22px;accent-color:var(--jere)}
+.acc{display:flex;gap:10px;justify-content:flex-end}
+.lb{width:min(720px,94vw)}
+.lb img{width:100%;display:block;max-height:75vh;object-fit:contain;background:#000}
+.lb .mb{padding:16px 20px}
+.lb .mb p{margin:0 0 12px}
+#confeti{position:fixed;inset:0;pointer-events:none;z-index:99}
+.d.pasada{text-decoration:line-through;opacity:.35;filter:saturate(.5);cursor:default}
+.d.pasada:hover{transform:none;background:color-mix(in srgb,var(--c) 22%,transparent);color:var(--text)}
+.d.actual{box-shadow:0 0 0 2px var(--c)}
+.d.atras{background:rgba(255,107,107,.3);color:#ffdede;box-shadow:0 0 0 2px #ff6b6b}
+.d.atras:hover{background:rgba(255,107,107,.5);color:#fff}
+.d.atras::after{content:"⚠️";position:absolute;top:-5px;right:-3px;font-size:.62rem}
+.alerta{display:inline-flex;flex-direction:column;gap:2px;margin:0 0 14px;padding:10px 16px;border-radius:14px;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.5);color:#ffb3b3;font-weight:600;animation:alerta 2s ease-in-out infinite}
+.alerta small{font-weight:400;color:var(--muted)}
+@keyframes alerta{50%{background:rgba(255,107,107,.28)}}
+.ult{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:.85rem;color:var(--muted);max-width:240px}
+.ult .thumb{width:64px;height:64px;border-radius:14px;flex:none}
+:focus-visible{outline:2px solid #fff;outline-offset:2px}
+@media(max-width:640px){.hero{grid-template-columns:1fr}.estado{min-width:0;align-items:stretch}.thumb{align-self:center}}
+@media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
+</style>
+</head>
+<body>
+<div class="aurora"><i></i><i></i><i></i></div>
+<canvas id="confeti"></canvas>
+
+<div class="wrap">
+  <header>
+    <h1>Limpieza 2026 🐶</h1>
+    <p class="sub">Turnos semanales de Pry, Jere y Eze</p>
+    <div class="legend">
+      <span class="chip pry">Pry</span><span class="chip jere">Jere</span><span class="chip eze">Eze</span>
+    </div>
+  </header>
+
+  <section id="hero" class="hero" aria-live="polite"></section>
+  <main id="calendario" class="grid"></main>
+  <p class="nota">Las fotos se guardan en este dispositivo. ✓ = entregada (tocá una semana con foto para verla). Tachado = semana salteada por atraso. La foto solo se puede subir desde el día de entrega.</p>
+</div>
+
+<dialog id="dlgEntrega">
+  <form method="dialog" class="mb" id="frm">
+    <h4 id="entTitulo">Entregar terraza</h4>
+    <p id="entSub"></p>
+    <label class="drop" id="drop">
+      <input type="file" id="foto" accept="image/*" capture="environment">
+      <div class="ph"><div class="ico">📷</div><strong>Tocá para abrir la cámara</strong><div style="color:var(--muted);font-size:.85rem">Es obligatoria para entregar</div></div>
+      <img id="prev" alt="Vista previa de la terraza">
+    </label>
+    <button type="button" class="btn ghost" id="galBtn" style="width:100%;margin-top:10px;padding:10px">Elegir de la galería</button>
+    <input type="file" id="fotoGal" accept="image/*" hidden>
+    <label class="chk"><input type="checkbox" id="tilde"><span>La terraza quedó limpia</span></label>
+    <div class="acc">
+      <button type="button" class="btn ghost" id="cancelar">Cancelar</button>
+      <button type="submit" class="btn" id="enviar" disabled>Entregar terraza</button>
+    </div>
+  </form>
+</dialog>
+
+<dialog id="dlgFoto" class="lb">
+  <img id="grande" alt="Foto de la terraza entregada">
+  <div class="mb"><p id="leyenda"></p><div class="acc"><button class="btn ghost" id="cerrarFoto">Cerrar</button></div></div>
+</dialog>
+
+<script>
+const NOMBRES = ['pry','jere','eze'];
+const LABEL = {pry:'Pry', jere:'Jere', eze:'Eze'};
+const START = new Date(2026,0,1);
+const DAY = 864e5;
+const BASE = 38; // semana jue 24 sep – mié 30 sep: Eze quedó debiendo la terraza
+const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
+const DS = ['D','L','M','M','J','V','S'];
+const KEY = 'limpieza2026v3';
+
+const dia = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
+let diaRender = 0;
+const quien = s => NOMBRES[((s%3)+3)%3];
+const ini = s => new Date(START.getTime() + s*7*DAY);      // jueves 00:00
+const fin = s => new Date(START.getTime() + (s+1)*7*DAY);  // vence al terminar el miércoles
+const abre = s => new Date(fin(s) - DAY);                  // la foto se puede subir desde el miércoles (día de entrega)
+const fmt = (d,o) => d.toLocaleDateString('es-AR',o);
+const semanaDe = d => Math.floor(Math.round((new Date(d.getFullYear(),d.getMonth(),d.getDate()) - START)/DAY)/7);
+const rangoSemana = w => `${fmt(ini(w),{weekday:'short',day:'numeric'})} – ${fmt(new Date(fin(w)-1),{weekday:'short',day:'numeric',month:'short'})}`;
+
+function dur(ms){
+  const d = Math.floor(ms/DAY), h = Math.floor(ms%DAY/36e5), m = Math.floor(ms%36e5/6e4);
+  if(d) return d + (d>1?' días':' día') + (h?` y ${h} h`:'');
+  if(h) return h + ' h' + (m?` ${m} min`:'');
+  return Math.max(1,m) + ' min';
+}
+
+/* ---------- Estado: la rotación depende de las entregas ---------- */
+let entregas = [];
+try { entregas = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){}
+const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(entregas)); } catch(e){} };
+
+// Siguiente turno: el que sigue en la rotación; si su semana ya venció, se saltea.
+function proxima(prev, t){
+  let s = prev+1; while(abre(s) <= t) s++; // si ya llegó el día de entrega de ese turno, se saltea (la terraza ya está limpia)
+  if(quien(s) === quien(prev)) s++; // nunca le toca dos veces seguidas a la misma persona
+  return s;
+}
+
+function estado(){
+  const hechas = {}, lista = []; let cur = BASE, desde = dia(ini(BASE));
+  entregas.slice().sort((a,b) => new Date(a.at)-new Date(b.at)).forEach(e => {
+    const at = new Date(e.at), hasta = dia(at);
+    hechas[cur] = e; lista.push({slot:cur, desde, hasta});   // el turno dura hasta el día que se entregó
+    cur = proxima(cur, at);
+    desde = new Date(Math.max(+ini(cur), +new Date(hasta.getFullYear(), hasta.getMonth(), hasta.getDate()+1)));
+  });
+  return {hechas, cur, desde, lista};
+}
+
+/* ---------- Fotos en IndexedDB ---------- */
+const db = new Promise(res => {
+  try {
+    const r = indexedDB.open('limpieza-fotos-v3', 1);
+    r.onupgradeneeded = () => r.result.createObjectStore('fotos');
+    r.onsuccess = () => res(r.result); r.onerror = () => res(null);
+  } catch(e){ res(null); }
+});
+const idb = async (modo, fn) => {
+  const d = await db; if(!d) return null;
+  return new Promise(res => {
+    const t = d.transaction('fotos', modo), rq = fn(t.objectStore('fotos'));
+    t.oncomplete = () => res(rq && rq.result); t.onerror = () => res(null);
+  });
+};
+const guardarFoto = (w,data) => idb('readwrite', s => s.put(data,w));
+const leerFoto = w => idb('readonly', s => s.get(w));
+
+/* ---------- Render ---------- */
+const hero = document.getElementById('hero');
+
+async function renderHero(){
+  const {cur} = estado(), q = quien(cur), now = new Date();
+  hero.style.setProperty('--c', `var(--${q})`);
+  const puede = now >= abre(cur), tarde = now >= fin(cur);
+  const sig = quien(proxima(cur, now));
+  const venc = fmt(new Date(fin(cur)-1),{weekday:'long',day:'numeric',month:'long'});
+  let aviso;
+  if(tarde) aviso = `<div class="alerta">⚠️ Atrasada <b id="atrasoT">${dur(now-fin(cur))}</b><small>Venció el ${venc}</small></div>`;
+  else if(puede) aviso = `<p class="rango">Vence el ${venc}.</p>`;
+  else aviso = `<p class="rango">Se entrega el ${venc}. Hasta ese día no se puede subir la foto.</p>`;
+
+  const ult = entregas.length ? entregas.slice().sort((a,b) => new Date(b.at)-new Date(a.at))[0] : null;
+  const foto = ult ? await leerFoto(ult.slot) : null;
+  const ultHtml = ult ? `<div class="ult" data-w="${ult.slot}">
+      ${foto ? `<img class="thumb" src="${foto}" alt="Última foto entregada">` : ''}
+      <span>Última: ${LABEL[ult.who]}, ${fmt(new Date(ult.at),{day:'numeric',month:'short'})}${ult.tarde>0 ? ` · ${dur(ult.tarde)} tarde` : ''}</span></div>` : '';
+
+  hero.innerHTML = `<div>
+      <p class="rango" style="margin:0">Turno del ${rangoSemana(cur)}</p>
+      <h2>Le toca a <b>${LABEL[q]}</b></h2>
+      ${aviso}
+      <p class="prog">Cuando la entregue, sigue ${LABEL[sig]}.</p>
+    </div>
+    <div class="estado">
+      ${puede ? `<button class="btn pulso" data-w="${cur}" id="btnEntregar">📷 Entregar terraza limpia</button>` : ''}
+      ${ultHtml}
+    </div>`;
+}
+
+function renderMeses(animar){
+  const st = estado(), now = new Date(), sig = proxima(st.cur, now);
+  diaRender = dia(now).getTime();
+  let html = '';
+  for(let m=0;m<12;m++){
+    const f = new Date(2026,m,1), finMes = new Date(2026,m+1,1);
+    html += `<section class="month" style="--i:${animar?m:0};${animar?'':'animation:none'}"><h3>${MESES[m]}</h3><div class="dias">`;
+    DS.forEach(d => html += `<div class="h">${d}</div>`);
+    for(let i=0;i<f.getDay();i++) html += '<div class="vacio"></div>';
+    while(f < finMes){
+      let w = semanaDe(f), q = quien(w);
+      const c = ['d'], turno = st.lista.find(x => f >= x.desde && f <= x.hasta);
+      if(w < BASE) c.push('hecha','hist');
+      else if(turno){ w = turno.slot; q = quien(w); c.push('hecha'); }   // turno entregado: llega hasta el día de entrega
+      else if(f >= st.desde && now >= fin(st.cur) && f <= dia(now)){ w = st.cur; q = quien(w); c.push('actual','atras'); }   // atrasado: rojo hasta hoy
+      else if(f >= st.desde && now < fin(st.cur) && f < fin(st.cur)){ w = st.cur; q = quien(w); c.push('actual'); }
+      else c.push(w < sig ? 'pasada' : 'futuro');
+      c.splice(1, 0, q);
+      if(f.toDateString() === now.toDateString()) c.push('hoy');
+      html += `<button class="${c.join(' ')}" data-w="${w}" aria-label="${fmt(f,{day:'numeric',month:'long'})}, turno de ${LABEL[q]}">${f.getDate()}</button>`;
+      f.setDate(f.getDate()+1);
+    }
+    html += '</div></section>';
+  }
+  document.getElementById('calendario').innerHTML = html;
+}
+
+/* ---------- Entregar (foto obligatoria + tilde) ---------- */
+const dlg = document.getElementById('dlgEntrega'), foto = document.getElementById('foto'),
+      fotoGal = document.getElementById('fotoGal'), tilde = document.getElementById('tilde'),
+      enviar = document.getElementById('enviar'), prev = document.getElementById('prev'),
+      drop = document.getElementById('drop');
+let wActual = null, fotoData = null;
+const validar = () => enviar.disabled = !(fotoData && tilde.checked);
+
+function abrirEntrega(w){
+  wActual = w; fotoData = null; foto.value = ''; fotoGal.value = ''; tilde.checked = false;
+  drop.classList.remove('tiene'); prev.removeAttribute('src');
+  const q = quien(w);
+  dlg.style.setProperty('--c', `var(--${q})`);
+  enviar.style.setProperty('--c', `var(--${q})`);
+  document.getElementById('entTitulo').textContent = `Terraza de ${LABEL[q]}`;
+  document.getElementById('entSub').textContent = `Turno del ${rangoSemana(w)}`;
+  validar(); dlg.showModal();
+  foto.click(); // abre la cámara directo
+}
+
+function comprimir(file){
+  return new Promise((res,rej) => {
+    const img = new Image(), url = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, 1200/Math.max(img.width,img.height));
+      const c = document.createElement('canvas'); c.width = img.width*s; c.height = img.height*s;
+      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',.72));
+    };
+    img.onerror = rej; img.src = url;
+  });
+}
+async function procesar(inp){
+  const f = inp.files[0]; if(!f) return;
+  try { fotoData = await comprimir(f); prev.src = fotoData; drop.classList.add('tiene'); }
+  catch(e){ fotoData = null; alert('No se pudo leer esa imagen. Probá con otra foto.'); }
+  validar();
+}
+foto.addEventListener('change', () => procesar(foto));
+fotoGal.addEventListener('change', () => procesar(fotoGal));
+document.getElementById('galBtn').onclick = () => fotoGal.click();
+tilde.addEventListener('change', validar);
+document.getElementById('cancelar').onclick = () => dlg.close();
+
+document.getElementById('frm').addEventListener('submit', async ev => {
+  ev.preventDefault();
+  if(!(fotoData && tilde.checked) || wActual !== estado().cur || new Date() < abre(wActual)) return;
+  const now = new Date();
+  await guardarFoto(wActual, fotoData);
+  entregas.push({slot:wActual, who:quien(wActual), at:now.toISOString(), tarde:Math.max(0, now - fin(wActual))});
+  guardar(); dlg.close();
+  renderMeses(false); await renderHero(); lanzarConfeti();
+});
+
+/* ---------- Ver foto ---------- */
+const dlgFoto = document.getElementById('dlgFoto');
+async function verFoto(w){
+  const d = await leerFoto(w), e = estado().hechas[w]; if(!d || !e) return;
+  document.getElementById('grande').src = d;
+  document.getElementById('leyenda').textContent =
+    `Terraza de ${LABEL[e.who]} · entregada el ${fmt(new Date(e.at),{day:'numeric',month:'long'})}` +
+    (e.tarde>0 ? ` · con ${dur(e.tarde)} de atraso` : ' · a tiempo');
+  dlgFoto.showModal();
+}
+document.getElementById('cerrarFoto').onclick = () => dlgFoto.close();
+[dlg,dlgFoto].forEach(d => d.addEventListener('click', e => { if(e.target===d) d.close(); }));
+
+document.addEventListener('click', e => {
+  const t = e.target.closest('[data-w]'); if(!t) return;
+  const w = +t.dataset.w, st = estado();
+  if(st.hechas[w]) verFoto(w);
+  else if(w === st.cur && new Date() >= abre(w)) abrirEntrega(w);
+});
+
+/* ---------- Confeti ---------- */
+function lanzarConfeti(){
+  if(matchMedia('(prefers-reduced-motion:reduce)').matches) return;
+  const cv = document.getElementById('confeti'), x = cv.getContext('2d');
+  cv.width = innerWidth; cv.height = innerHeight;
+  const cols = ['#ff9fc4','#86e3a8','#8fcaff','#ffe08a','#fff'];
+  const ps = Array.from({length:130}, () => ({
+    x: cv.width/2, y: cv.height*.6, vx:(Math.random()-.5)*16, vy:-Math.random()*17-5,
+    r: Math.random()*6+3, c: cols[Math.random()*cols.length|0], a: Math.random()*6, va:(Math.random()-.5)*.4
+  }));
+  let n = 0;
+  (function paso(){
+    x.clearRect(0,0,cv.width,cv.height);
+    ps.forEach(p => { p.vy += .45; p.x += p.vx; p.y += p.vy; p.a += p.va;
+      x.save(); x.translate(p.x,p.y); x.rotate(p.a); x.fillStyle = p.c; x.fillRect(-p.r,-p.r/2,p.r*2,p.r); x.restore(); });
+    if(++n < 110) requestAnimationFrame(paso); else x.clearRect(0,0,cv.width,cv.height);
+  })();
+}
+
+/* El atraso se actualiza solo cada minuto */
+setInterval(() => {
+  const c = estado().cur, n = new Date(), t = document.getElementById('atrasoT'), b = document.getElementById('btnEntregar');
+  if(dia(n).getTime() !== diaRender){ renderMeses(false); renderHero(); }
+  else if(n >= fin(c) && t) t.textContent = dur(n - fin(c));
+  else if((n >= fin(c) && !t) || (n >= abre(c) && !b)){ renderMeses(false); renderHero(); }
+}, 60000);
+
+renderMeses(true);
+renderHero();
+</script>
+</body>
+</html>
