@@ -113,6 +113,7 @@ dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:
 .d.actual{box-shadow:0 0 0 2px var(--c)}
 .d.atras{background:rgba(255,107,107,.3);color:#ffdede;box-shadow:0 0 0 2px #ff6b6b}
 .d.atras:hover{background:rgba(255,107,107,.5);color:#fff}
+.btn.ghost.peligro{color:#ff9b9b;border-color:rgba(255,107,107,.45)}
 .d.atras::after{content:"⚠️";position:absolute;top:-5px;right:-3px;font-size:.62rem}
 .alerta{display:inline-flex;flex-direction:column;gap:2px;margin:0 0 14px;padding:10px 16px;border-radius:14px;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.5);color:#ffb3b3;font-weight:600;animation:alerta 2s ease-in-out infinite}
 .alerta small{font-weight:400;color:var(--muted)}
@@ -139,7 +140,7 @@ dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:
 
   <section id="hero" class="hero" aria-live="polite"></section>
   <main id="calendario" class="grid"></main>
-  <p class="nota">Las fotos se guardan en este dispositivo. ✓ = entregada (tocá una semana con foto para verla). Tachado = semana salteada por atraso. La foto solo se puede subir desde el día de entrega.</p>
+  <p class="nota">✓ = entregada (tocá una semana con foto para verla o quitar la última entrega si fue sin querer). Tachado = semana salteada por atraso. La foto solo se puede subir desde el día de entrega.</p>
 </div>
 
 <dialog id="dlgEntrega">
@@ -163,7 +164,7 @@ dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:
 
 <dialog id="dlgFoto" class="lb">
   <img id="grande" alt="Foto de la terraza entregada">
-  <div class="mb"><p id="leyenda"></p><div class="acc"><button class="btn ghost" id="cerrarFoto">Cerrar</button></div></div>
+  <div class="mb"><p id="leyenda"></p><div class="acc"><button class="btn ghost peligro" id="quitarFoto" style="display:none">Quitar entrega</button><button class="btn ghost" id="cerrarFoto">Cerrar</button></div></div>
 </dialog>
 
 <script>
@@ -175,6 +176,22 @@ const BASE = 38; // semana jue 24 sep – mié 30 sep: Eze quedó debiendo la te
 const MESES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 const DS = ['D','L','M','M','J','V','S'];
 const KEY = 'limpieza2026v3';
+
+/* ===== FIREBASE =====
+   Pegá acá la config de tu proyecto (Firebase Console → Configuración del proyecto → Tus apps → Web).
+   Mientras sea null, todo se guarda solo en este dispositivo (modo local).
+   Ejemplo: const FIREBASE_CONFIG = { apiKey:"...", authDomain:"...", projectId:"...", storageBucket:"...", messagingSenderId:"...", appId:"..." };
+*/
+const FIREBASE_CONFIG = {
+  apiKey: "AIzaSyBEzSmz2S-FvMQb8RKzPO0Pv4U3rGpAhDo",
+  authDomain: "calendario-de-limpieza-2026.firebaseapp.com",
+  projectId: "calendario-de-limpieza-2026",
+  storageBucket: "calendario-de-limpieza-2026.firebasestorage.app",
+  messagingSenderId: "1069429307265",
+  appId: "1:1069429307265:web:d52ea67b0cb1aeac765a80"
+};
+let remoto = null;
+const cacheFotos = {};
 
 const dia = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
 let diaRender = 0;
@@ -195,7 +212,7 @@ function dur(ms){
 
 /* ---------- Estado: la rotación depende de las entregas ---------- */
 let entregas = [];
-try { entregas = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){}
+if(!FIREBASE_CONFIG){ try { entregas = JSON.parse(localStorage.getItem(KEY)) || []; } catch(e){} }
 const guardar = () => { try { localStorage.setItem(KEY, JSON.stringify(entregas)); } catch(e){} };
 
 // Siguiente turno: el que sigue en la rotación; si su semana ya venció, se saltea.
@@ -232,7 +249,15 @@ const idb = async (modo, fn) => {
   });
 };
 const guardarFoto = (w,data) => idb('readwrite', s => s.put(data,w));
-const leerFoto = w => idb('readonly', s => s.get(w));
+async function leerFoto(w){
+  if(!remoto) return idb('readonly', s => s.get(w));
+  if(cacheFotos[w]) return cacheFotos[w];
+  try {
+    const d = await remoto.fs.getDoc(remoto.fs.doc(remoto.db, 'fotos', 't'+w));
+    if(d.exists()) return cacheFotos[w] = d.data().data;
+  } catch(e){ console.error(e); }
+  return null;
+}
 
 /* ---------- Render ---------- */
 const hero = document.getElementById('hero');
@@ -317,10 +342,10 @@ function comprimir(file){
   return new Promise((res,rej) => {
     const img = new Image(), url = URL.createObjectURL(file);
     img.onload = () => {
-      const s = Math.min(1, 1200/Math.max(img.width,img.height));
+      const s = Math.min(1, 1000/Math.max(img.width,img.height));
       const c = document.createElement('canvas'); c.width = img.width*s; c.height = img.height*s;
       c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',.72));
+      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',.65));
     };
     img.onerror = rej; img.src = url;
   });
@@ -341,23 +366,68 @@ document.getElementById('frm').addEventListener('submit', async ev => {
   ev.preventDefault();
   if(!(fotoData && tilde.checked) || wActual !== estado().cur || new Date() < abre(wActual)) return;
   const now = new Date();
-  await guardarFoto(wActual, fotoData);
-  entregas.push({slot:wActual, who:quien(wActual), at:now.toISOString(), tarde:Math.max(0, now - fin(wActual))});
-  guardar(); dlg.close();
+  const e = {slot:wActual, who:quien(wActual), at:now.toISOString(), tarde:Math.max(0, now - fin(wActual))};
+  enviar.disabled = true; enviar.textContent = 'Guardando…';
+  try {
+    if(remoto){
+      const {fs, db} = remoto, b = fs.writeBatch(db);
+      b.set(fs.doc(db,'fotos','t'+e.slot), {data:fotoData});
+      b.set(fs.doc(db,'entregas','t'+e.slot), e);   // falla si otra persona ya entregó este turno
+      await Promise.race([b.commit(), new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 20000))]);
+      cacheFotos[e.slot] = fotoData;
+    } else {
+      await guardarFoto(e.slot, fotoData); entregas.push(e); guardar();
+    }
+  } catch(err){
+    console.error(err);
+    enviar.textContent = 'Entregar terraza'; validar();
+    alert(err.code === 'permission-denied'
+      ? 'No se pudo guardar. Si otra persona ya entregó este turno, la pantalla se actualiza sola; si no, revisá las reglas de Firestore.'
+      : 'No se pudo guardar. Revisá la conexión y probá de nuevo.');
+    return;
+  }
+  enviar.textContent = 'Entregar terraza'; dlg.close();
   renderMeses(false); await renderHero(); lanzarConfeti();
 });
 
 /* ---------- Ver foto ---------- */
-const dlgFoto = document.getElementById('dlgFoto');
+const dlgFoto = document.getElementById('dlgFoto'), quitar = document.getElementById('quitarFoto');
+let wQuitar = null;
 async function verFoto(w){
   const d = await leerFoto(w), e = estado().hechas[w]; if(!d || !e) return;
   document.getElementById('grande').src = d;
   document.getElementById('leyenda').textContent =
     `Terraza de ${LABEL[e.who]} · entregada el ${fmt(new Date(e.at),{day:'numeric',month:'long'})}` +
     (e.tarde>0 ? ` · con ${dur(e.tarde)} de atraso` : ' · a tiempo');
+  const ult = entregas.slice().sort((a,b) => new Date(b.at)-new Date(a.at))[0];
+  wQuitar = w; quitar.style.display = (ult && ult.slot === w) ? '' : 'none';   // solo se puede quitar la última entrega
   dlgFoto.showModal();
 }
 document.getElementById('cerrarFoto').onclick = () => dlgFoto.close();
+
+quitar.onclick = async () => {
+  const e = estado().hechas[wQuitar]; if(!e) return;
+  if(!confirm(`¿Quitar la entrega de ${LABEL[e.who]}? Se borra la foto y el turno vuelve a quedar pendiente.`)) return;
+  quitar.disabled = true;
+  try {
+    if(remoto){
+      const {fs, db} = remoto, b = fs.writeBatch(db);
+      b.delete(fs.doc(db,'entregas','t'+wQuitar));
+      b.delete(fs.doc(db,'fotos','t'+wQuitar));
+      await b.commit();
+      delete cacheFotos[wQuitar];
+    } else {
+      entregas = entregas.filter(x => x.slot !== wQuitar); guardar();
+      idb('readwrite', s => s.delete(wQuitar));
+    }
+  } catch(err){
+    console.error(err);
+    alert('No se pudo quitar. Revisá la conexión y las reglas de Firestore.');
+    quitar.disabled = false; return;
+  }
+  quitar.disabled = false; dlgFoto.close();
+  renderMeses(false); renderHero();
+};
 [dlg,dlgFoto].forEach(d => d.addEventListener('click', e => { if(e.target===d) d.close(); }));
 
 document.addEventListener('click', e => {
@@ -394,8 +464,31 @@ setInterval(() => {
   else if((n >= fin(c) && !t) || (n >= abre(c) && !b)){ renderMeses(false); renderHero(); }
 }, 60000);
 
-renderMeses(true);
-renderHero();
+/* ---------- Arranque: Firebase (compartido) o modo local ---------- */
+let primera = true;
+async function iniciarFirebase(){
+  const V = '10.14.1';
+  const [app, fs] = await Promise.all([
+    import(`https://www.gstatic.com/firebasejs/${V}/firebase-app.js`),
+    import(`https://www.gstatic.com/firebasejs/${V}/firebase-firestore.js`)
+  ]);
+  const db = fs.getFirestore(app.initializeApp(FIREBASE_CONFIG));
+  remoto = {db, fs};
+  fs.onSnapshot(fs.collection(db,'entregas'), snap => {   // se actualiza en vivo en los 3 celus
+    entregas = snap.docs.map(d => d.data());
+    renderMeses(primera); primera = false; renderHero();
+  }, err => {
+    console.error(err);
+    hero.innerHTML = '<p class="rango">No se pudo conectar con Firebase. Revisá la config y las reglas.</p>';
+  });
+}
+if(FIREBASE_CONFIG){
+  hero.innerHTML = '<p class="rango">Conectando…</p>';
+  iniciarFirebase().catch(err => { console.error(err); hero.innerHTML = '<p class="rango">No se pudo cargar Firebase.</p>'; });
+} else {
+  renderMeses(true);
+  renderHero();
+}
 </script>
 </body>
 </html>
