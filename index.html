@@ -41,7 +41,8 @@ h1{font-size:clamp(1.9rem,5vw,3.1rem);font-weight:800;letter-spacing:-.03em;marg
 .hero::before{content:"";position:absolute;inset:0 auto 0 0;width:6px;background:var(--c)}
 @keyframes rise{from{opacity:0;transform:translateY(24px) scale(.98)}to{opacity:1;transform:none}}
 .hero h2{font-size:clamp(1.8rem,5vw,3rem);margin:2px 0 4px;letter-spacing:-.03em;line-height:1.05}
-.hero h2 b{color:var(--c)}
+.hero h2 b{color:var(--c);background:linear-gradient(100deg,var(--c) 30%,#fff 50%,var(--c) 70%);background-size:250% 100%;-webkit-background-clip:text;background-clip:text;-webkit-text-fill-color:transparent;animation:brillo 5s linear infinite}
+@keyframes brillo{from{background-position:120% 0}to{background-position:-120% 0}}
 .hero .rango{color:var(--muted);margin:0 0 18px}
 .bar{height:8px;border-radius:99px;background:rgba(255,255,255,.1);overflow:hidden;max-width:360px}
 .bar span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--pry),var(--jere),var(--eze));transition:width 1.2s cubic-bezier(.2,.8,.2,1)}
@@ -79,10 +80,10 @@ h1{font-size:clamp(1.9rem,5vw,3.1rem);font-weight:800;letter-spacing:-.03em;marg
 .d.hecha::after{content:"✓";position:absolute;top:1px;right:3px;font-size:.55rem}
 .d.hist{cursor:default}
 .d.hist:hover{transform:none}
-.d.hoy{outline:2px solid #fff;outline-offset:1px;animation:hoy 2s ease-in-out infinite}
-@keyframes hoy{50%{outline-color:transparent}}
+.d.hoy{outline:2px solid rgba(255,255,255,.9);outline-offset:1px}
+.d.hoy::before{content:"";position:absolute;inset:-3px;border-radius:13px;border:2px solid #fff;pointer-events:none;animation:ring 2.2s ease-out infinite}
+@keyframes ring{0%{transform:scale(.92);opacity:.9}100%{transform:scale(1.4);opacity:0}}
 .vacio{visibility:hidden}
-.nota{margin:22px 0 0;text-align:center;color:var(--muted);font-size:.8rem}
 
 /* Diálogos */
 dialog{border:1px solid var(--line);border-radius:26px;padding:0;color:var(--text);background:#181a30;width:min(440px,92vw);max-height:90vh;box-shadow:0 30px 80px rgba(0,0,0,.6)}
@@ -114,12 +115,34 @@ dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:
 .d.atras{background:rgba(255,107,107,.3);color:#ffdede;box-shadow:0 0 0 2px #ff6b6b}
 .d.atras:hover{background:rgba(255,107,107,.5);color:#fff}
 .btn.ghost.peligro{color:#ff9b9b;border-color:rgba(255,107,107,.45)}
-.d.atras::after{content:"⚠️";position:absolute;top:-5px;right:-3px;font-size:.62rem}
+.d.atras::after{content:"⚠️";position:absolute;top:-5px;right:-3px;font-size:.62rem;animation:tiembla 2.4s ease-in-out infinite}
+@keyframes tiembla{0%,80%,100%{transform:none}86%{transform:rotate(-14deg) scale(1.2)}92%{transform:rotate(12deg) scale(1.2)}}
 .alerta{display:inline-flex;flex-direction:column;gap:2px;margin:0 0 14px;padding:10px 16px;border-radius:14px;background:rgba(255,107,107,.15);border:1px solid rgba(255,107,107,.5);color:#ffb3b3;font-weight:600;animation:alerta 2s ease-in-out infinite}
 .alerta small{font-weight:400;color:var(--muted)}
 @keyframes alerta{50%{background:rgba(255,107,107,.28)}}
 .ult{display:flex;align-items:center;gap:12px;cursor:pointer;font-size:.85rem;color:var(--muted);max-width:240px}
 .ult .thumb{width:64px;height:64px;border-radius:14px;flex:none}
+.hero>div{animation:subir .6s cubic-bezier(.2,.8,.2,1) both}
+.hero>.estado{animation-delay:.12s}
+@keyframes subir{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.month{position:relative}
+.month.rv{animation:none;opacity:0;transform:translateY(26px) scale(.98)}
+.month.rv.in{opacity:1;transform:none;transition:opacity .7s ease,transform .7s cubic-bezier(.2,.8,.2,1)}
+.month.mes-actual{border-color:rgba(255,255,255,.3)}
+.month.mes-actual::before{content:"";position:absolute;inset:-2px;z-index:-1;border-radius:24px;background:linear-gradient(135deg,var(--pry),var(--eze),var(--jere));filter:blur(22px);opacity:.25;animation:latir 4.5s ease-in-out infinite}
+@keyframes latir{50%{opacity:.5;transform:scale(1.02)}}
+.month.anim .d{animation:dpop .5s cubic-bezier(.3,1.6,.5,1) backwards;animation-delay:calc(var(--k)*16ms + 450ms)}
+@keyframes dpop{from{opacity:0;transform:scale(.3)}to{opacity:1;transform:none}}
+.d.ola{animation:ola .55s cubic-bezier(.3,1.5,.5,1) backwards;animation-delay:calc(var(--k)*30ms)}
+@keyframes ola{0%{transform:scale(.4);filter:brightness(1.8)}60%{transform:scale(1.22)}100%{transform:none;filter:none}}
+.d:active{transform:scale(.92)}
+.chip{transition:box-shadow .4s,border-color .4s,transform .4s}
+.chip.activo{border-color:var(--c);box-shadow:0 0 0 1px var(--c),0 8px 22px -8px var(--c);transform:translateY(-2px)}
+.hero::after{content:"";position:absolute;inset:0;pointer-events:none;background:radial-gradient(70% 140% at 0% 50%,color-mix(in srgb,var(--c) 16%,transparent),transparent 70%)}
+.hero>*{position:relative;z-index:1}
+.arriba{position:fixed;right:max(16px,env(safe-area-inset-right));bottom:max(18px,env(safe-area-inset-bottom));z-index:50;font:inherit;font-weight:600;font-size:.85rem;color:var(--text);padding:10px 16px;border-radius:99px;border:1px solid var(--line);background:rgba(24,26,48,.75);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);cursor:pointer;opacity:0;transform:translateY(16px);pointer-events:none;transition:opacity .3s,transform .3s}
+.arriba.ver{opacity:1;transform:none;pointer-events:auto}
+.pill{margin-left:8px;font-size:.7rem;font-weight:600;padding:3px 9px;border-radius:99px;background:rgba(255,255,255,.14);vertical-align:middle}
 :focus-visible{outline:2px solid #fff;outline-offset:2px}
 @media(max-width:640px){.hero{grid-template-columns:1fr}.estado{min-width:0;align-items:stretch}.thumb{align-self:center}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:.01ms!important;animation-iteration-count:1!important;transition-duration:.01ms!important}}
@@ -128,6 +151,7 @@ dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:
 <body>
 <div class="aurora"><i></i><i></i><i></i></div>
 <canvas id="confeti"></canvas>
+<button id="arriba" class="arriba" aria-label="Volver al turno">↑ Turno</button>
 
 <div class="wrap">
   <header>
@@ -140,7 +164,6 @@ dialog::backdrop{background:rgba(6,7,16,.7);backdrop-filter:blur(6px);animation:
 
   <section id="hero" class="hero" aria-live="polite"></section>
   <main id="calendario" class="grid"></main>
-  <p class="nota">✓ = entregada (tocá una semana con foto para verla o quitar la última entrega si fue sin querer). Tachado = semana salteada por atraso. La foto solo se puede subir desde el día de entrega.</p>
 </div>
 
 <dialog id="dlgEntrega">
@@ -194,7 +217,7 @@ let remoto = null;
 const cacheFotos = {};
 
 const dia = d => new Date(d.getFullYear(), d.getMonth(), d.getDate());
-let diaRender = 0;
+let diaRender = 0, olaSlot = null, scrolleado = false;
 const quien = s => NOMBRES[((s%3)+3)%3];
 const ini = s => new Date(START.getTime() + s*7*DAY);      // jueves 00:00
 const fin = s => new Date(START.getTime() + (s+1)*7*DAY);  // vence al terminar el miércoles
@@ -249,21 +272,24 @@ const idb = async (modo, fn) => {
   });
 };
 const guardarFoto = (w,data) => idb('readwrite', s => s.put(data,w));
-async function leerFoto(w){
+async function leerFoto(w, at){
   if(!remoto) return idb('readonly', s => s.get(w));
-  if(cacheFotos[w]) return cacheFotos[w];
+  const k = w + '_' + at;   // la clave incluye la fecha: si se quita y se vuelve a entregar, no queda la foto vieja
+  if(cacheFotos[k]) return cacheFotos[k];
   try {
     const d = await remoto.fs.getDoc(remoto.fs.doc(remoto.db, 'fotos', 't'+w));
-    if(d.exists()) return cacheFotos[w] = d.data().data;
+    if(d.exists()) return cacheFotos[k] = d.data().data;
   } catch(e){ console.error(e); }
   return null;
 }
 
 /* ---------- Render ---------- */
 const hero = document.getElementById('hero');
+let htmlHero = '', heroSeq = 0;
 
 async function renderHero(){
-  const {cur} = estado(), q = quien(cur), now = new Date();
+  const mi = ++heroSeq, {cur} = estado(), q = quien(cur), now = new Date();
+  document.querySelectorAll('.chip').forEach(c => c.classList.toggle('activo', c.classList.contains(q)));
   hero.style.setProperty('--c', `var(--${q})`);
   const puede = now >= abre(cur), tarde = now >= fin(cur);
   const sig = quien(proxima(cur, now));
@@ -274,12 +300,13 @@ async function renderHero(){
   else aviso = `<p class="rango">Se entrega el ${venc}. Hasta ese día no se puede subir la foto.</p>`;
 
   const ult = entregas.length ? entregas.slice().sort((a,b) => new Date(b.at)-new Date(a.at))[0] : null;
-  const foto = ult ? await leerFoto(ult.slot) : null;
+  const foto = ult ? await leerFoto(ult.slot, ult.at) : null;
+  if(mi !== heroSeq) return;   // llegó una actualización más nueva mientras esperábamos la foto
   const ultHtml = ult ? `<div class="ult" data-w="${ult.slot}">
       ${foto ? `<img class="thumb" src="${foto}" alt="Última foto entregada">` : ''}
       <span>Última: ${LABEL[ult.who]}, ${fmt(new Date(ult.at),{day:'numeric',month:'short'})}${ult.tarde>0 ? ` · ${dur(ult.tarde)} tarde` : ''}</span></div>` : '';
 
-  hero.innerHTML = `<div>
+  const html = `<div>
       <p class="rango" style="margin:0">Turno del ${rangoSemana(cur)}</p>
       <h2>Le toca a <b>${LABEL[q]}</b></h2>
       ${aviso}
@@ -289,15 +316,20 @@ async function renderHero(){
       ${puede ? `<button class="btn pulso" data-w="${cur}" id="btnEntregar">📷 Entregar terraza limpia</button>` : ''}
       ${ultHtml}
     </div>`;
+  if(html === htmlHero) return;   // sin cambios: no se repite la animación
+  htmlHero = html; hero.innerHTML = html;
 }
 
 function renderMeses(animar){
   const st = estado(), now = new Date(), sig = proxima(st.cur, now);
   diaRender = dia(now).getTime();
+  let kOla = 0;
   let html = '';
   for(let m=0;m<12;m++){
     const f = new Date(2026,m,1), finMes = new Date(2026,m+1,1);
-    html += `<section class="month" style="--i:${animar?m:0};${animar?'':'animation:none'}"><h3>${MESES[m]}</h3><div class="dias">`;
+    const dm = m - now.getMonth(), esAct = now.getFullYear() === 2026 && dm === 0; let kk = 0;
+    const cm = 'month' + (esAct ? ' mes-actual' : '') + (animar ? ' rv' : '');
+    html += `<section class="${cm}" style="--i:0;${animar?'':'animation:none'}"><h3>${MESES[m]}${esAct ? '<span class="pill">Este mes</span>' : ''}</h3><div class="dias">`;
     DS.forEach(d => html += `<div class="h">${d}</div>`);
     for(let i=0;i<f.getDay();i++) html += '<div class="vacio"></div>';
     while(f < finMes){
@@ -310,12 +342,26 @@ function renderMeses(animar){
       else c.push(w < sig ? 'pasada' : 'futuro');
       c.splice(1, 0, q);
       if(f.toDateString() === now.toDateString()) c.push('hoy');
-      html += `<button class="${c.join(' ')}" data-w="${w}" aria-label="${fmt(f,{day:'numeric',month:'long'})}, turno de ${LABEL[q]}">${f.getDate()}</button>`;
+      let k = kk++;
+      if(turno && turno.slot === olaSlot){ c.push('ola'); k = kOla++; }   // ola de color al entregar
+      html += `<button class="${c.join(' ')}" style="--k:${k}" data-w="${w}" aria-label="${fmt(f,{day:'numeric',month:'long'})}, turno de ${LABEL[q]}">${f.getDate()}</button>`;
       f.setDate(f.getDate()+1);
     }
     html += '</div></section>';
   }
   document.getElementById('calendario').innerHTML = html;
+  if(animar){   // los meses aparecen al llegar a verlos
+    const ms = document.querySelectorAll('.month.rv');
+    if('IntersectionObserver' in window){
+      const io = new IntersectionObserver(es => es.forEach(en => { if(en.isIntersecting){ en.target.classList.add('in'); if(en.target.classList.contains('mes-actual')) en.target.classList.add('anim'); io.unobserve(en.target); } }), {threshold:.15});
+      ms.forEach(el => io.observe(el));
+    } else ms.forEach(el => { el.classList.add('in'); if(el.classList.contains('mes-actual')) el.classList.add('anim'); });
+    if(!scrolleado){   // al abrir, baja solo al mes actual (se cancela si ya empezaste a scrollear)
+      scrolleado = true; let quieto = true;
+      ['wheel','touchstart','keydown'].forEach(ev => addEventListener(ev, () => quieto = false, {once:true, passive:true}));
+      setTimeout(() => { const a = document.querySelector('.month.mes-actual'); if(quieto && a) a.scrollIntoView({behavior:'smooth', block:'center'}); }, 1500);
+    }
+  }
 }
 
 /* ---------- Entregar (foto obligatoria + tilde) ---------- */
@@ -338,17 +384,24 @@ function abrirEntrega(w){
   foto.click(); // abre la cámara directo
 }
 
-function comprimir(file){
+// Carga la imagen respetando la orientación EXIF (celus que guardan la foto "de costado")
+async function cargarImagen(file){
+  if(window.createImageBitmap){
+    try { return await createImageBitmap(file, {imageOrientation:'from-image'}); } catch(e){}
+  }
   return new Promise((res,rej) => {
     const img = new Image(), url = URL.createObjectURL(file);
-    img.onload = () => {
-      const s = Math.min(1, 1000/Math.max(img.width,img.height));
-      const c = document.createElement('canvas'); c.width = img.width*s; c.height = img.height*s;
-      c.getContext('2d').drawImage(img,0,0,c.width,c.height);
-      URL.revokeObjectURL(url); res(c.toDataURL('image/jpeg',.65));
-    };
+    img.onload = () => { URL.revokeObjectURL(url); res(img); };
     img.onerror = rej; img.src = url;
   });
+}
+async function comprimir(file){
+  const img = await cargarImagen(file);
+  const s = Math.min(1, 1000/Math.max(img.width,img.height));
+  const c = document.createElement('canvas'); c.width = Math.round(img.width*s); c.height = Math.round(img.height*s);
+  c.getContext('2d').drawImage(img,0,0,c.width,c.height);
+  if(img.close) img.close();
+  return c.toDataURL('image/jpeg',.65);
 }
 async function procesar(inp){
   const f = inp.files[0]; if(!f) return;
@@ -364,7 +417,8 @@ document.getElementById('cancelar').onclick = () => dlg.close();
 
 document.getElementById('frm').addEventListener('submit', async ev => {
   ev.preventDefault();
-  if(!(fotoData && tilde.checked) || wActual !== estado().cur || new Date() < abre(wActual)) return;
+  if(!(fotoData && tilde.checked)) return;
+  if(wActual !== estado().cur || new Date() < abre(wActual)){ alert('Este turno ya cambió (alguien lo entregó o todavía no se habilita). Se actualiza la pantalla.'); dlg.close(); return; }
   const now = new Date();
   const e = {slot:wActual, who:quien(wActual), at:now.toISOString(), tarde:Math.max(0, now - fin(wActual))};
   enviar.disabled = true; enviar.textContent = 'Guardando…';
@@ -374,7 +428,7 @@ document.getElementById('frm').addEventListener('submit', async ev => {
       b.set(fs.doc(db,'fotos','t'+e.slot), {data:fotoData});
       b.set(fs.doc(db,'entregas','t'+e.slot), e);   // falla si otra persona ya entregó este turno
       await Promise.race([b.commit(), new Promise((_,rej) => setTimeout(() => rej(new Error('timeout')), 20000))]);
-      cacheFotos[e.slot] = fotoData;
+      cacheFotos[e.slot + '_' + e.at] = fotoData;
     } else {
       await guardarFoto(e.slot, fotoData); entregas.push(e); guardar();
     }
@@ -387,14 +441,15 @@ document.getElementById('frm').addEventListener('submit', async ev => {
     return;
   }
   enviar.textContent = 'Entregar terraza'; dlg.close();
-  renderMeses(false); await renderHero(); lanzarConfeti();
+  olaSlot = e.slot; renderMeses(false); olaSlot = null; await renderHero(); lanzarConfeti();
 });
 
 /* ---------- Ver foto ---------- */
 const dlgFoto = document.getElementById('dlgFoto'), quitar = document.getElementById('quitarFoto');
 let wQuitar = null;
 async function verFoto(w){
-  const d = await leerFoto(w), e = estado().hechas[w]; if(!d || !e) return;
+  const e = estado().hechas[w]; if(!e) return;
+  const d = await leerFoto(w, e.at); if(!d) return;
   document.getElementById('grande').src = d;
   document.getElementById('leyenda').textContent =
     `Terraza de ${LABEL[e.who]} · entregada el ${fmt(new Date(e.at),{day:'numeric',month:'long'})}` +
@@ -415,7 +470,7 @@ quitar.onclick = async () => {
       b.delete(fs.doc(db,'entregas','t'+wQuitar));
       b.delete(fs.doc(db,'fotos','t'+wQuitar));
       await b.commit();
-      delete cacheFotos[wQuitar];
+      delete cacheFotos[wQuitar + '_' + e.at];
     } else {
       entregas = entregas.filter(x => x.slot !== wQuitar); guardar();
       idb('readwrite', s => s.delete(wQuitar));
@@ -458,11 +513,17 @@ function lanzarConfeti(){
 
 /* El atraso se actualiza solo cada minuto */
 setInterval(() => {
+  if(FIREBASE_CONFIG && primera) return;   // todavía no llegaron los datos de Firebase
   const c = estado().cur, n = new Date(), t = document.getElementById('atrasoT'), b = document.getElementById('btnEntregar');
   if(dia(n).getTime() !== diaRender){ renderMeses(false); renderHero(); }
   else if(n >= fin(c) && t) t.textContent = dur(n - fin(c));
   else if((n >= fin(c) && !t) || (n >= abre(c) && !b)){ renderMeses(false); renderHero(); }
 }, 60000);
+
+/* Botón para volver arriba (al turno) */
+const arriba = document.getElementById('arriba');
+addEventListener('scroll', () => arriba.classList.toggle('ver', scrollY > 500), {passive:true});
+arriba.onclick = () => scrollTo({top:0, behavior:'smooth'});
 
 /* ---------- Arranque: Firebase (compartido) o modo local ---------- */
 let primera = true;
@@ -475,6 +536,7 @@ async function iniciarFirebase(){
   const db = fs.getFirestore(app.initializeApp(FIREBASE_CONFIG));
   remoto = {db, fs};
   fs.onSnapshot(fs.collection(db,'entregas'), snap => {   // se actualiza en vivo en los 3 celus
+    if(primera && snap.metadata.fromCache){ hero.innerHTML = '<p class="rango">Sin conexión. Esperando los datos…</p>'; return; }
     entregas = snap.docs.map(d => d.data());
     renderMeses(primera); primera = false; renderHero();
   }, err => {
@@ -484,6 +546,7 @@ async function iniciarFirebase(){
 }
 if(FIREBASE_CONFIG){
   hero.innerHTML = '<p class="rango">Conectando…</p>';
+  setTimeout(() => { if(primera) hero.innerHTML = '<p class="rango">Sigue conectando… revisá tu conexión.</p>'; }, 10000);
   iniciarFirebase().catch(err => { console.error(err); hero.innerHTML = '<p class="rango">No se pudo cargar Firebase.</p>'; });
 } else {
   renderMeses(true);
